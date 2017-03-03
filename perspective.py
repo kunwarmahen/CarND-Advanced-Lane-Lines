@@ -5,9 +5,11 @@ import matplotlib.pyplot as plt
 class Perspective:
 
 	def __init__(self):
-		self.src = np.float32([[571,460],[700, 460],[1034,673],[276,673]])
+		#self.src = np.float32([[571,460],[700, 460],[1034,673],[276,673]]) #large
 		self.dst = np.float32([[264,0],[1034, 0],[1034,679],[264,679]])	
-		
+		#self.src = np.float32([[534,495],[748, 490],[1035,675],[256,685]]) # small
+		#self.dst = np.float32([[264,126],[1034, 126],[1034,679],[264,679]])	
+		self.src = np.float32([[559,476],[727, 475],[1037,673],[255,684]]) #middle
 
 	def perspective_transform(self):
 		return cv2.getPerspectiveTransform(self.src, self.dst) 

@@ -7,7 +7,8 @@ class Threshold:
 
 	def __init__(self):
 		self.ksize = 15 # Sobel kernel size
-		self.sobel_grad_thresh = (20, 150)
+		#self.sobel_grad_thresh = (20, 150)
+		self.sobel_grad_thresh =  (50, 150)
 		self.combined_binary = None
 		self.color_binary = None
 	
@@ -88,9 +89,13 @@ class Threshold:
 
 		gradx = self.abs_sobel_thresh(img, orient='x', sobel_kernel=self.ksize, thresh=self.sobel_grad_thresh)
 		grady = self.abs_sobel_thresh(img, orient='y', sobel_kernel=self.ksize, thresh=self.sobel_grad_thresh)
+		#mag_binary = self.mag_thresh(img, sobel_kernel=self.ksize, mag_thresh=(30, 100))
+		#dir_binary = self.dir_threshold(img, sobel_kernel=self.ksize, thresh=(0.7, 1.3))
+		#s_binary = self.color_threshold(img, s_thresh=(90, 255))
+		
 		mag_binary = self.mag_thresh(img, sobel_kernel=self.ksize, mag_thresh=(30, 100))
-		dir_binary = self.dir_threshold(img, sobel_kernel=self.ksize, thresh=(0.7, 1.3))
-		s_binary = self.color_threshold(img, s_thresh=(90, 255))
+		dir_binary = self.dir_threshold(img, sobel_kernel=self.ksize, thresh=(0, np.pi/2))
+		s_binary = self.color_threshold(img, s_thresh=(90, 150))
 
 
 		#combined_binary = np.zeros_like(dir_binary)
@@ -98,7 +103,8 @@ class Threshold:
 
 		#Combine the Thresholds
 		self.combined_binary = np.zeros_like(dir_binary)
-		self.combined_binary[((gradx == 1) & (grady == 1)) | ((mag_binary == 1) & (dir_binary == 1)) | ((s_binary == 1))] = 1
+		#self.combined_binary[((gradx == 1) & (grady == 1)) | ((mag_binary == 1) & (dir_binary == 1)) | ((s_binary == 1))] = 1
+		self.combined_binary[(gradx == 1) | (grady == 1) | (mag_binary == 1) & (dir_binary == 1) | (s_binary == 1)] = 1
 		self.color_binary = np.dstack(( np.zeros_like(self.combined_binary), self.combined_binary, s_binary))
 		
 		return self.combined_binary

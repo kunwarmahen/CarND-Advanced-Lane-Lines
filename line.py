@@ -35,12 +35,13 @@ class Line:
 		self.position = None
 		self.left_curverad = None
 		self.right_curverad = None
+		self.name = None
 		
 		
 		
 		# Define conversions in x and y from pixels space to meters
 		self.ym_per_pix = 30/720 # meters per pixel in y dimension
-		self.xm_per_pix = 3.7/700 # meters per pixel in x dimension
+		self.xm_per_pix = 3.7/770 # meters per pixel in x dimension
 		
 	def detect_initial_lane_lines(self, warped, display=False):
 		histogram = np.sum(warped[warped.shape[0]/2:,:], axis=0)
@@ -66,9 +67,9 @@ class Line:
 		leftx_current = leftx_base
 		rightx_current = rightx_base
 		# Set the width of the windows +/- margin
-		margin = 100
+		margin = 50
 		# Set minimum number of pixels found to recenter window
-		minpix = 50
+		minpix = 70
 		# Create empty lists to receive left and right lane pixel indices
 		left_lane_inds = []
 		right_lane_inds = []
@@ -118,7 +119,7 @@ class Line:
 		
 		# Calculate the position of the vehicle
 		self.position = ((np.mean(self.left_fitx)+np.mean(self.right_fitx))/2)
-		
+				
 		if display == True:
 			out_img[nonzeroy[left_lane_inds], nonzerox[left_lane_inds]] = [255, 0, 0]
 			out_img[nonzeroy[right_lane_inds], nonzerox[right_lane_inds]] = [0, 0, 255]
@@ -186,9 +187,10 @@ class Line:
 		pts_left = np.array([np.transpose(np.vstack([self.left_fitx, ploty]))])
 		pts_right = np.array([np.flipud(np.transpose(np.vstack([self.right_fitx, ploty])))])
 		pts = np.hstack((pts_left, pts_right))
-
+		
 		# Draw the lane onto the warped blank image
 		cv2.fillPoly(color_warp, np.int_([pts]), (0,255, 0))
+				
 
 		# Warp the blank back to original image space using inverse perspective matrix (Minv)
 		perspective = Perspective()
